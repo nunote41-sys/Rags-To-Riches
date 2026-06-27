@@ -1,0 +1,30 @@
+export const applianceItems = [
+  {
+    id: 'fridge',
+    name: 'Refrigerator',
+    desc: 'Keeps food fresh twice as long. Stores raw meats safely.',
+    icon: '🧊',
+    price: 500,
+    category: 'Appliances',
+    effectType: 'inventory',
+    inventoryId: 'fridge',
+    weightKg: 50,          // delivered, not carried
+    isPerishable: false,
+    shelfLifeDays: 0,
+    permanent: true,
+  },
+  {
+    id: 'stove',
+    name: 'Gas Stove',
+    desc: 'Required for cooking. Place raw meats here to cook them.',
+    icon: '🔥',
+    price: 350,
+    category: 'Appliances',
+    effectType: 'inventory',
+    inventoryId: 'stove',
+    weightKg: 40,
+    isPerishable: false,
+    shelfLifeDays: 0,
+    permanent: true,
+  },
+];

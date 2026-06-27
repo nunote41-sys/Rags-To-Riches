@@ -80,27 +80,27 @@ export function initGame() {
     checkLoanDefault: checkLoanDefault,
     applySubscriptions: () => {},
     applyLaptopDurability: () => {
-  // Laptop decay
-  if (G.inventory.laptop) {
-    G.laptopDurability = (G.laptopDurability || 100) - 8;
-    if (G.laptopDurability <= 0) {
-      G.inventory.laptop = false;
-      G.laptopDurability = 0;
-      showToast('💻 Laptop broke! Buy a new one.', 'error');
-      addLog('💻 Laptop broke down.');
-    }
-  }
-  // Phone decay
-  if (G.inventory.phone) {
-    G.phoneDurability = (G.phoneDurability || 100) - 5;
-    if (G.phoneDurability <= 0) {
-      G.inventory.phone = false;
-      G.phoneDurability = 0;
-      showToast('📱 Phone broke! Buy a new one.', 'error');
-      addLog('📱 Phone broke.');
-    }
-  }
-},
+      // Laptop decay
+      if (G.inventory.laptop) {
+        G.laptopDurability = (G.laptopDurability || 100) - 8;
+        if (G.laptopDurability <= 0) {
+          G.inventory.laptop = false;
+          G.laptopDurability = 0;
+          showToast('💻 Laptop broke! Buy a new one.', 'error');
+          addLog('💻 Laptop broke down.');
+        }
+      }
+      // Phone decay
+      if (G.inventory.phone) {
+        G.phoneDurability = (G.phoneDurability || 100) - 5;
+        if (G.phoneDurability <= 0) {
+          G.inventory.phone = false;
+          G.phoneDurability = 0;
+          showToast('📱 Phone broke! Buy a new one.', 'error');
+          addLog('📱 Phone broke.');
+        }
+      }
+    },
   });
 
   // 3. Connect trading to net worth

@@ -80,33 +80,58 @@ export function initGame() {
     checkLoanDefault: checkLoanDefault,
     applySubscriptions: () => {},
     applyLaptopDurability: () => {
-  // Laptop decay
-  if (G.inventory.laptop) {
-    G.laptopDurability = (G.laptopDurability || 100) - 8;
-    if (G.laptopDurability <= 0) {
-      G.inventory.laptop = false;
-      G.laptopDurability = 0;
-      showToast('💻 Laptop broke! Buy a new one.', 'error');
-      addLog('💻 Laptop broke down.');
-    }
-  }
-  // Phone decay
-  if (G.inventory.phone) {
-    G.phoneDurability = (G.phoneDurability || 100) - 5;
-    if (G.phoneDurability <= 0) {
-      G.inventory.phone = false;
-      G.phoneDurability = 0;
-      showToast('📱 Phone broke! Buy a new one.', 'error');
-      addLog('📱 Phone broke.');
-    }
-  }
-},
+      // Laptop decay
+      if (G.inventory.laptop) {
+        G.laptopDurability = (G.laptopDurability || 100) - 8;
+        if (G.laptopDurability <= 0) {
+          G.inventory.laptop = false;
+          G.laptopDurability = 0;
+          showToast('💻 Laptop broke! Buy a new one.', 'error');
+          addLog('💻 Laptop broke down.');
+        }
+      }
+      // Phone decay
+      if (G.inventory.phone) {
+        G.phoneDurability = (G.phoneDurability || 100) - 5;
+        if (G.phoneDurability <= 0) {
+          G.inventory.phone = false;
+          G.phoneDurability = 0;
+          showToast('📱 Phone broke! Buy a new one.', 'error');
+          addLog('📱 Phone broke.');
+        }
+      }
+    },
   });
 
   // 3. Connect trading to net worth
   setOpenPositionsGetter(getPositionsValue);
 
-  // 4. Load saved game or show intro
+  // 4. Initialize Mobile Sidebar Drawer Logic
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+  const sidebar = document.getElementById('sidebar');
+  
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.toggle('active');
+    });
+
+    // Automatically close sidebar layout when tabs or actions are tapped on mobile
+    sidebar.addEventListener('click', (e) => {
+      if (e.target.closest('.nav-item') || e.target.closest('.tick-btn')) {
+        sidebar.classList.remove('active');
+      }
+    });
+
+    // Close mobile menu if user taps outside the panel drawer
+    document.addEventListener('click', (e) => {
+      if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+        sidebar.classList.remove('active');
+      }
+    });
+  }
+
+  // 5. Load saved game or show intro
   const loaded = loadGameAndResume();
   if (!loaded) {
     document.getElementById('screen-intro').classList.add('active');
@@ -134,7 +159,6 @@ export function startGame(difficulty) {
   resetGame(difficulty);
   G.diff = difficulty;
 
-  // No job is assigned – player must apply manually
   G.job = null;
   G.jobWorkedToday = false;
   G.jobShiftsThisWeek = 0;
@@ -146,7 +170,6 @@ export function startGame(difficulty) {
     G.strength = 0; G.hygiene = 80; G.hour = 6; G.minute = 0;
     G.inventory.phone = true; G.inventory.laptop = true; G.inventory.wifi = true;
     G.phoneDurability = 100;
-    // no applyJob('office')
   } else if (difficulty === 'hustle') {
     G.cash = 10; G.bank = 80; G.rent = 400; G.rentDue = 2; G.creditScore = 310;
     G.health = 75; G.fatigue = 60; G.morale = 30; G.hunger = 30; G.stress = 50;
@@ -154,17 +177,14 @@ export function startGame(difficulty) {
     G.inventory.phone = false; 
     G.phoneDurability = 0;
     G.inventory.laptop = false;
-    // no applyJob('vendor')
   } else { // normal
     G.cash = 350; G.bank = 1200; G.rent = 480; G.rentDue = 1; G.creditScore = 510;
     G.health = 90; G.fatigue = 80; G.morale = 65; G.hunger = 55; G.stress = 25;
     G.strength = 0; G.hygiene = 70; G.hour = 6; G.minute = 0;
     G.inventory.phone = true; G.inventory.laptop = false;
     G.phoneDurability = 100;
-    // no applyJob('delivery')
   }
 
-  // Clear dynamic arrays
   G.log = []; G.criminalRecord = []; G.bankTxLog = [];
   G.portfolio = []; G.tradeHistory = []; G.customAssets = [];
   G.coursesCompleted = []; G.skills = [];
